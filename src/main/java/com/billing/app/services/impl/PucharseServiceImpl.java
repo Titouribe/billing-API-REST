@@ -48,8 +48,6 @@ public class PucharseServiceImpl implements IPucharseService {
         billLine.setProduct(product);
         billLine.setQuantity(pucharse.getQuantity());
 
-        billLineRepository.save(billLine);
-
         bill.setClient(client);
         bill.addBillLine(billLine);
 
