@@ -50,11 +50,14 @@ public class PucharseServiceImpl implements IPucharseService {
 
         bill.setClient(client);
         bill.addBillLine(billLine);
+        bill.setDescription(pucharse.getDescription());
+        bill.setObservation(pucharse.getObservation());
 
         billRepository.save(bill);
 
         PucharseResponse pucharseResponse = new PucharseResponse();
         pucharseResponse.setOrderTrackingNumber(GenerateOrderTrackingNumber.generateRandomUUID());
+        pucharseResponse.setTotal(bill.calculateTotal());
 
         return pucharseResponse;
     }
