@@ -22,9 +22,8 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ClientDTO> saveClient(@RequestBody ClientDTO clientDTO) {
-        Client client = clientMapper.toEntity(clientDTO);
-        clientService.saveClient(client);
-        return new ResponseEntity<>(clientMapper.toDTO(client), HttpStatus.CREATED);
+        return new ResponseEntity<>(clientMapper.toDTO(
+                clientService.saveClient(clientMapper.toEntity(clientDTO))), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
