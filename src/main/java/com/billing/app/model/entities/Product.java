@@ -1,6 +1,5 @@
 package com.billing.app.model.entities;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,6 +25,5 @@ public class Product {
 
     @Column(name = "date_created")
     @CreationTimestamp
-    @NotNull
     private Date dateCreated;
 }
