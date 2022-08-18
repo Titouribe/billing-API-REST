@@ -30,10 +30,10 @@ public class Bill {
     @CreationTimestamp
     private Date dateCreated;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Client client;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "bill_id")
     private Set<BillLine> billLines = new HashSet<>();
 
