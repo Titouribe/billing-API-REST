@@ -1,6 +1,5 @@
 package com.billing.app.model.entities;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,10 +30,9 @@ public class Client {
 
     @Column(name = "date_created")
     @CreationTimestamp
-    @NotNull
     private Date dateCreated;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "client")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "client")
     private Set<Bill> bills = new HashSet<>();
 
     public void addBills(Bill bill){

@@ -30,7 +30,7 @@ public class Bill {
     @CreationTimestamp
     private Date dateCreated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Client client;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
