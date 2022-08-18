@@ -59,4 +59,18 @@ public class ClientService implements IClientService {
         }
     }
 
+    @Override
+    @Transactional
+    public Client updateClient(Long id, Client client) {
+        Optional<Client> clientOptional = clientRepository.findById(id);
+        if(clientOptional.isPresent()){
+            clientOptional.get().setEmail(client.getEmail());
+            clientOptional.get().setFirstName(client.getFirstName());
+            clientOptional.get().setLastName(client.getLastName());
+            return clientRepository.save(clientOptional.get());
+        } else {
+            return null;
+        }
+    }
+
 }

@@ -54,4 +54,10 @@ public class ClientController {
         return new ResponseEntity<>(clientService.deleteClient(id),HttpStatus.ACCEPTED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ClientDTO> updateClient(@PathVariable Long id, @RequestBody ClientDTO clientDTO) {
+        Client client = clientService.updateClient(id, clientMapper.toEntity(clientDTO));
+        return new ResponseEntity<>(clientMapper.toDTO(client), HttpStatus.ACCEPTED);
+    }
+
 }
