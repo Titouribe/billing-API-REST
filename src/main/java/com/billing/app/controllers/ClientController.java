@@ -1,7 +1,6 @@
 package com.billing.app.controllers;
 
 import com.billing.app.model.dtos.ClientDTO;
-import com.billing.app.model.entities.Client;
 import com.billing.app.model.mappers.ClientMapper;
 import com.billing.app.services.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +21,7 @@ public class ClientController {
     private ClientMapper clientMapper;
 
     @PostMapping
-    public ResponseEntity<ClientDTO> saveClient(@RequestBody ClientDTO clientDTO) {
+    public ResponseEntity<ClientDTO> saveClient(@RequestBody @Valid ClientDTO clientDTO) {
         return new ResponseEntity<>(clientMapper.toDTO(
                 clientService.saveClient(clientMapper.toEntity(clientDTO))), HttpStatus.CREATED);
     }
@@ -54,9 +54,8 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientDTO> updateClient(@PathVariable Long id, @RequestBody ClientDTO clientDTO) {
-        Client client = clientService.updateClient(id, clientMapper.toEntity(clientDTO));
-        return new ResponseEntity<>(clientMapper.toDTO(client), HttpStatus.ACCEPTED);
+    public ResponseEntity<String> updateClient(@PathVariable Long id, @RequestBody ClientDTO clientDTO) {
+        return new ResponseEntity<>(clientService.updateClient(id, clientMapper.toEntity(clientDTO)), HttpStatus.ACCEPTED);
     }
 
 }

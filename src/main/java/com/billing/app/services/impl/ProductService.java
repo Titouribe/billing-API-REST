@@ -1,5 +1,8 @@
 package com.billing.app.services.impl;
 
+import com.billing.app.constants.Constants;
+import com.billing.app.constants.ErrorsConstants;
+import com.billing.app.constants.ValidConstants;
 import com.billing.app.model.entities.Product;
 import com.billing.app.repositories.IProductRepository;
 import com.billing.app.services.IProductService;
@@ -15,6 +18,12 @@ public class ProductService implements IProductService {
 
     @Autowired
     private IProductRepository productRepository;
+
+    @Autowired
+    private ValidConstants validConstants;
+
+    @Autowired
+    private ErrorsConstants errorsConstants;
 
     @Override
     @Transactional
@@ -33,9 +42,9 @@ public class ProductService implements IProductService {
         Optional<Product> productOptional = productRepository.findById(id);
         if (productOptional.isPresent()) {
             productRepository.delete(productOptional.get());
-            return "Product " + productOptional.get().getName() + " deleted successfully";
+            return validConstants.foundAndDelete(productOptional.get().getName());
         } else {
-            return "Product not found";
+            return errorsConstants.notFound(Constants.PRODUCT,String.valueOf(id));
         }
     }
 

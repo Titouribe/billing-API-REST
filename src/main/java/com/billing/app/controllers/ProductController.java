@@ -1,6 +1,5 @@
 package com.billing.app.controllers;
 
-import com.billing.app.model.dtos.ClientDTO;
 import com.billing.app.model.dtos.ProductDTO;
 import com.billing.app.model.mappers.ProductMapper;
 import com.billing.app.services.IProductService;
@@ -9,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +22,7 @@ public class ProductController {
     private ProductMapper productMapper;
 
     @PostMapping
-    public ResponseEntity<ProductDTO> saveProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> saveProduct(@RequestBody @Valid ProductDTO productDTO) {
         return new ResponseEntity<>(productMapper.toDto(
                 productService.saveProduct(productMapper.toEntity(productDTO))), HttpStatus.CREATED);
     }

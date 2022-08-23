@@ -1,6 +1,5 @@
 package com.billing.app.services;
 
-import com.billing.app.model.dtos.ProductDTO;
 import com.billing.app.model.entities.Product;
 
 import java.util.List;

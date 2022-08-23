@@ -11,5 +11,5 @@ public interface IClientService {
     public Client findByEmail(String email);
     public List<Client> findAllByName(String name);
     public String deleteClient(Long id);
-    public Client updateClient(Long id, Client client);
+    public String updateClient(Long id, Client client);
 }
