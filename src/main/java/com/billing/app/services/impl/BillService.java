@@ -1,5 +1,9 @@
 package com.billing.app.services.impl;
 
+import com.billing.app.constants.Constants;
+import com.billing.app.constants.ErrorsConstants;
+import com.billing.app.constants.ValidConstants;
+import com.billing.app.exceptions.RequestException;
 import com.billing.app.model.entities.Bill;
 import com.billing.app.model.entities.Client;
 import com.billing.app.repositories.IBillRepository;
@@ -17,7 +21,10 @@ public class BillService implements IBillService {
 
     @Autowired
     private IBillRepository billRepository;
-
+    @Autowired
+    private ErrorsConstants errorsConstants;
+    @Autowired
+    private ValidConstants validConstants;
     @Autowired
     private IClientRepository clientRepository;
 
@@ -25,17 +32,22 @@ public class BillService implements IBillService {
     @Transactional
     public Bill saveBill(Bill bill) {
         Optional<Client> clientOptional = clientRepository.findById(bill.getClient().getId());
-        if (clientOptional.isPresent()) {
-            bill.setClient(clientOptional.get());
-            return billRepository.save(bill);
-        } else {
-            return null;
+        if (clientOptional.isEmpty()) {
+            throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT,
+                    String.valueOf(bill.getClient().getId())));
         }
+        bill.setClient(clientOptional.get());
+        return billRepository.save(bill);
     }
 
     @Override
     public Bill findById(Long id) {
-        return billRepository.findById(id).orElse(null);
+        Optional<Bill> billOptional = billRepository.findById(id);
+        if (billOptional.isEmpty()) {
+            throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT,
+                    String.valueOf(id)));
+        }
+        return billOptional.get();
     }
 
     @Override
@@ -47,11 +59,10 @@ public class BillService implements IBillService {
     @Transactional
     public String deleteBill(Long id) {
         Optional<Bill> billOptional = billRepository.findById(id);
-        if (billOptional.isPresent()) {
-            billRepository.delete(billOptional.get());
-            return "Bill " + billOptional.get().getDescription() + " deleted";
-        } else {
-            return "Bill not found";
+        if (billOptional.isEmpty()) {
+            throw new RequestException("401", errorsConstants.notFound(Constants.BILL, String.valueOf(id)));
         }
+        billRepository.delete(billOptional.get());
+        return "Bill " + billOptional.get().getId() + " deleted";
     }
 }
