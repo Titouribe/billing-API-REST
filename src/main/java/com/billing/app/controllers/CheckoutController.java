@@ -19,6 +19,6 @@ public class CheckoutController {
 
     @PostMapping
     public ResponseEntity<PucharseResponse> doOrder(@RequestBody @Valid Pucharse pucharse) {
-        return new ResponseEntity<>(pucharseService.placeOrder(pucharse), HttpStatus.OK);
+        return new ResponseEntity<>(pucharseService.placeOrder(pucharse), HttpStatus.CREATED);
     }
 }

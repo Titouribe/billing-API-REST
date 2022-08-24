@@ -50,9 +50,6 @@ public class PucharseServiceImpl implements IPucharseService {
         Client client = clientOptional.get();
         Product product = productOptional.get();
 
-        System.out.println(product.getName());
-        System.out.println(client.getFirstName());
-
         BillLine billLine = new BillLine();
         Bill bill = new Bill();
 
