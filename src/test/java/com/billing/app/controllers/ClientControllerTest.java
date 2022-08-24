@@ -69,6 +69,22 @@ class ClientControllerTest {
     }
 
     @Test
+    void testSaveClientThrowBadRequest() throws Exception {
+
+        clientDTO = new ClientDTO();
+        clientDTO.setEmail("test@email.com");
+        clientDTO.setFirstName("");
+        clientDTO.setLastName("test");
+
+        when(clientService.saveClient(any())).thenReturn(client);
+        mvc.perform(post("/client")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(clientDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("Size"));
+    }
+
+    @Test
     void testFindAllWhitoutParam() throws Exception {
         when(clientService.findAll()).thenReturn(List.of(client));
         mvc.perform(get("/client").contentType(MediaType.APPLICATION_JSON))

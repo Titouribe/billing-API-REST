@@ -35,7 +35,7 @@ public class Client {
     private String lastName;
 
     @NotBlank(message = "Email must not be empty")
-    @Email(message = "Invalid Email, must contain an @")
+    @Email(message = "Invalid Email")
     private String email;
 
     @Column(name = "date_created")

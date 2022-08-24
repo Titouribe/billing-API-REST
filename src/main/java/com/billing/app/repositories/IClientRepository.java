@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IClientRepository extends JpaRepository<Client, Long> {
-    List<Client> findAllByFirstName(String name);
+    Optional<List<Client>> findAllByFirstName(String name);
     Optional<Client> findByEmail(String name);
-    List<Client> findAllByEmail(String email);
+    Optional<List<Client>> findAllByEmail(String email);
 }

@@ -16,8 +16,6 @@ import com.billing.app.util.GenerateOrderTrackingNumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class PucharseServiceImpl implements IPucharseService {
 
@@ -35,20 +33,12 @@ public class PucharseServiceImpl implements IPucharseService {
     @Override
     public PucharseResponse placeOrder(Pucharse pucharse) {
 
-        Optional<Client> clientOptional = clientRepository.findById(pucharse.getClientId());
+        Client client = clientRepository.findById(pucharse.getClientId())
+                .orElseThrow(() -> new RequestException("401", "Client with id: " + pucharse.getClientId() + " not found."));
 
-        if(clientOptional.isEmpty()){
-            throw new RequestException("401", "Client with id: " + pucharse.getClientId() + " not found.");
-        }
 
-        Optional<Product> productOptional = productRepository.findById(pucharse.getProductId());
-
-        if(productOptional.isEmpty()){
-            throw new RequestException("401", "Product with id: " + pucharse.getProductId() + " not found.");
-        }
-
-        Client client = clientOptional.get();
-        Product product = productOptional.get();
+        Product product = productRepository.findById(pucharse.getProductId())
+                .orElseThrow(() -> new RequestException("401", "Product with id: " + pucharse.getProductId() + " not found."));
 
         BillLine billLine = new BillLine();
         Bill bill = new Bill();

@@ -33,7 +33,6 @@ public class ClientController {
 
     @GetMapping
     public ResponseEntity<List<ClientDTO>> findAll(@RequestParam(name = "name", required = false) String name,
-                                                   @RequestParam(name = "id", required = false) Long id,
                                                    @RequestParam(name = "email", required = false) String email) {
         if (name != null) {
             return new ResponseEntity<>(clientService.findAllByName(name)

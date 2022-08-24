@@ -31,23 +31,18 @@ public class BillService implements IBillService {
     @Override
     @Transactional
     public Bill saveBill(Bill bill) {
-        Optional<Client> clientOptional = clientRepository.findById(bill.getClient().getId());
-        if (clientOptional.isEmpty()) {
-            throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT,
-                    String.valueOf(bill.getClient().getId())));
-        }
-        bill.setClient(clientOptional.get());
+        Client client = clientRepository.findById(bill.getClient().getId())
+                .orElseThrow(() -> new RequestException("400", errorsConstants
+                        .notFound(Constants.CLIENT, String.valueOf(bill.getClient().getId()))));
+        bill.setClient(client);
         return billRepository.save(bill);
     }
 
     @Override
     public Bill findById(Long id) {
-        Optional<Bill> billOptional = billRepository.findById(id);
-        if (billOptional.isEmpty()) {
-            throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT,
-                    String.valueOf(id)));
-        }
-        return billOptional.get();
+        return billRepository.findById(id)
+                .orElseThrow(() -> new RequestException("400", errorsConstants
+                        .notFound(Constants.CLIENT, String.valueOf(id))));
     }
 
     @Override
@@ -58,11 +53,10 @@ public class BillService implements IBillService {
     @Override
     @Transactional
     public String deleteBill(Long id) {
-        Optional<Bill> billOptional = billRepository.findById(id);
-        if (billOptional.isEmpty()) {
-            throw new RequestException("401", errorsConstants.notFound(Constants.BILL, String.valueOf(id)));
-        }
-        billRepository.delete(billOptional.get());
-        return "Bill " + billOptional.get().getId() + " deleted";
+        Bill bill = billRepository.findById(id)
+                .orElseThrow(() -> new RequestException("400", errorsConstants
+                        .notFound(Constants.BILL, String.valueOf(id))));
+        billRepository.delete(bill);
+        return "Bill " + bill.getId() + " deleted";
     }
 }

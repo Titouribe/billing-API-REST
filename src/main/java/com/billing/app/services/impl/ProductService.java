@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService implements IProductService {
@@ -34,21 +33,18 @@ public class ProductService implements IProductService {
 
     @Override
     public Product findById(Long id) {
-        Optional<Product> productOptional = productRepository.findById(id);
-        if (productOptional.isEmpty()) {
-            throw new RequestException("401", errorsConstants.notFound(Constants.PRODUCT, String.valueOf(id)));
-        }
-        return productOptional.get();
+        return productRepository.findById(id)
+                .orElseThrow(() -> new RequestException("401", errorsConstants
+                        .notFound(Constants.PRODUCT, String.valueOf(id))));
     }
 
     @Override
     public String deleteProduct(Long id) {
-        Optional<Product> productOptional = productRepository.findById(id);
-        if (productOptional.isEmpty()) {
-            throw new RequestException("401", errorsConstants.notFound(Constants.PRODUCT, String.valueOf(id)));
-        }
-        productRepository.delete(productOptional.get());
-        return validConstants.foundAndDelete(productOptional.get().getName());
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RequestException("401", errorsConstants
+                        .notFound(Constants.PRODUCT, String.valueOf(id))));
+        productRepository.delete(product);
+        return validConstants.foundAndDelete(product.getName());
     }
 
     @Override

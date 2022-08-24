@@ -69,7 +69,7 @@ class ClientServiceTest {
 
     @Test
     void testFindAllByNameReturnEmptyList() {
-        when(clientRepository.findAllByFirstName(any())).thenReturn(List.of());
+        when(clientRepository.findAllByFirstName(any())).thenReturn(Optional.ofNullable(null));
         assertThrows(RequestException.class, () -> {
             clientService.findAllByName("test");
         });
@@ -77,8 +77,22 @@ class ClientServiceTest {
 
     @Test
     void testFindAllByNameReturnList() {
-        when(clientRepository.findAllByFirstName(any())).thenReturn(List.of(client));
+        when(clientRepository.findAllByFirstName(any())).thenReturn(Optional.of(List.of(client)));
         assertFalse(clientService.findAllByName(any()).isEmpty());
+    }
+
+    @Test
+    void testFindAllByEmailReturnList() {
+        when(clientRepository.findAllByEmail(any())).thenReturn(Optional.of(List.of(client)));
+        assertFalse(clientService.findAllByEmail(any()).isEmpty());
+    }
+
+    @Test
+    void testFindAllByEmailReturnEmptyList() {
+        when(clientRepository.findAllByEmail(any())).thenReturn(Optional.ofNullable(null));
+        assertThrows(RequestException.class, () -> {
+            clientService.findAllByEmail("test");
+        });
     }
 
     @Test

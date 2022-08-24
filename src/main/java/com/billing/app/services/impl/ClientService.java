@@ -40,61 +40,50 @@ public class ClientService implements IClientService {
 
     @Override
     public Client findById(Long id) {
-        Optional<Client> clientOptional = clientRepository.findById(id);
-        if (clientOptional.isEmpty()) {
-            throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT, String.valueOf(id)));
-        }
-        return clientOptional.get();
+        return clientRepository.findById(id)
+                .orElseThrow(() -> new RequestException("400", errorsConstants
+                        .notFound(Constants.CLIENT, String.valueOf(id))));
     }
 
     @Override
     public List<Client> findAllByEmail(String email) {
-        if (clientRepository.findAllByEmail(email).isEmpty()) {
-            throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT, email));
-        }
-        return clientRepository.findAllByEmail(email);
+        return clientRepository.findAllByEmail(email)
+                .orElseThrow(() -> new RequestException("400", errorsConstants.notFound(Constants.CLIENT, email)));
     }
 
     @Override
     public Client findByEmail(String email) {
-        Optional<Client> clientOptional = clientRepository.findByEmail(email);
-        if (clientOptional.isEmpty()) {
-            throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT, email));
-        }
-        return clientOptional.get();
+        return clientRepository.findByEmail(email)
+                .orElseThrow(() -> new RequestException("400", errorsConstants.notFound(Constants.CLIENT, email)));
     }
 
     @Override
     public List<Client> findAllByName(String name) {
-        if (clientRepository.findAllByFirstName(name).isEmpty()) {
-            throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT, name));
-        }
-        return clientRepository.findAllByFirstName(name);
+        return clientRepository.findAllByFirstName(name)
+                .orElseThrow(() -> new RequestException("400", errorsConstants.notFound(Constants.CLIENT, name)));
     }
 
     @Override
     @Transactional
     public String deleteClient(Long id) {
-        Optional<Client> clientOptional = clientRepository.findById(id);
-        if (clientOptional.isEmpty()) {
-            throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT, String.valueOf(id)));
-        }
-        clientRepository.deleteById(clientOptional.get().getId());
-        return validConstants.foundAndDelete(clientOptional.get().getFirstName());
+        Client clientToDelete = clientRepository.findById(id)
+                .orElseThrow(() -> new RequestException("400", errorsConstants
+                        .notFound(Constants.CLIENT, String.valueOf(id))));
+        clientRepository.deleteById(clientToDelete.getId());
+        return validConstants.foundAndDelete(clientToDelete.getFirstName());
     }
 
     @Override
     @Transactional
     public String updateClient(Long id, Client client) {
-        Optional<Client> clientOptional = clientRepository.findById(id);
-        if (clientOptional.isEmpty()) {
-            throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT, String.valueOf(id)));
-        }
-        clientOptional.get().setEmail(client.getEmail());
-        clientOptional.get().setFirstName(client.getFirstName());
-        clientOptional.get().setLastName(client.getLastName());
-        clientRepository.save(clientOptional.get());
-        return validConstants.foundAndUpdated(clientOptional.get().getFirstName());
+        Client clientToUpdate = clientRepository.findById(id)
+                .orElseThrow(() -> new RequestException("400", errorsConstants
+                        .notFound(Constants.CLIENT, String.valueOf(id))));
+        clientToUpdate.setEmail(client.getEmail());
+        clientToUpdate.setFirstName(client.getFirstName());
+        clientToUpdate.setLastName(client.getLastName());
+        clientRepository.save(clientToUpdate);
+        return validConstants.foundAndUpdated(clientToUpdate.getFirstName());
     }
 
 }
