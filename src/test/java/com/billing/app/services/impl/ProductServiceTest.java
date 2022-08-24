@@ -2,6 +2,7 @@ package com.billing.app.services.impl;
 
 import com.billing.app.constants.ErrorsConstants;
 import com.billing.app.constants.ValidConstants;
+import com.billing.app.exceptions.RequestException;
 import com.billing.app.model.entities.Product;
 import com.billing.app.repositories.IProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,15 +46,35 @@ class ProductServiceTest {
     }
 
     @Test
-    void deleteClientWhenClientExist() {
+    void testSaveProduct() {
+        when(productRepository.save(any(Product.class))).thenReturn(product);
+        assertEquals(product, productService.saveProduct(product));
+    }
+    @Test
+    void testFindByIdWhenProductExist() {
+        when(productRepository.findById(any())).thenReturn(Optional.of(product));
+        assertEquals(product.getName(), productService.findById(any()).getName());
+    }
+
+    @Test
+    void testFindByIdWhenProductDontExist() {
+        when(productRepository.findById(any())).thenReturn(Optional.ofNullable(null));
+        assertThrows(RequestException.class, () -> {
+            productService.findById(1L);
+        });
+    }
+
+    @Test
+    void testDeleteProductWhenProductExist() {
         when(productRepository.findById(any())).thenReturn(Optional.of(product));
         assertEquals(productService.deleteProduct(any()), validConstants.foundAndUpdated(product.getName()));
     }
 
     @Test
-    void deleteClientWhenClientDontExist() {
+    void testDeleteProductWhenProductDontExist() {
         when(productRepository.findById(any())).thenReturn(Optional.ofNullable(null));
-        assertEquals(productService.deleteProduct(any()), errorsConstants.notFound("Product"));
+        assertThrows(RequestException.class, () -> {
+            productService.deleteProduct(1L);
+        });
     }
-
 }

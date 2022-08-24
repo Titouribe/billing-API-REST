@@ -41,16 +41,24 @@ public class ClientService implements IClientService {
     @Override
     public Client findById(Long id) {
         Optional<Client> clientOptional = clientRepository.findById(id);
-        if (clientOptional.isEmpty()){
+        if (clientOptional.isEmpty()) {
             throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT, String.valueOf(id)));
         }
         return clientOptional.get();
     }
 
     @Override
+    public List<Client> findAllByEmail(String email) {
+        if (clientRepository.findAllByEmail(email).isEmpty()) {
+            throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT, email));
+        }
+        return clientRepository.findAllByEmail(email);
+    }
+
+    @Override
     public Client findByEmail(String email) {
         Optional<Client> clientOptional = clientRepository.findByEmail(email);
-        if (clientOptional.isEmpty()){
+        if (clientOptional.isEmpty()) {
             throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT, email));
         }
         return clientOptional.get();
@@ -58,7 +66,7 @@ public class ClientService implements IClientService {
 
     @Override
     public List<Client> findAllByName(String name) {
-        if(clientRepository.findAllByFirstName(name).isEmpty()){
+        if (clientRepository.findAllByFirstName(name).isEmpty()) {
             throw new RequestException("401", errorsConstants.notFound(Constants.CLIENT, name));
         }
         return clientRepository.findAllByFirstName(name);

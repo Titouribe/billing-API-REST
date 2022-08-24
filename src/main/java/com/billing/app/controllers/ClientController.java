@@ -38,10 +38,9 @@ public class ClientController {
         if (name != null) {
             return new ResponseEntity<>(clientService.findAllByName(name)
                     .stream().map(clientMapper::toDTO).toList(), HttpStatus.OK);
-        } else if (id != null) {
-            return new ResponseEntity<>(List.of(clientMapper.toDTO(clientService.findById(id))), HttpStatus.OK);
         } else if (email != null) {
-            return new ResponseEntity<>(List.of(clientMapper.toDTO(clientService.findByEmail(email))), HttpStatus.OK);
+            return new ResponseEntity<>(clientService.findAllByEmail(email)
+                    .stream().map(clientMapper::toDTO).toList(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(clientService.findAll().stream()
                     .map(clientMapper::toDTO).toList(), HttpStatus.OK);
@@ -50,7 +49,7 @@ public class ClientController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteClient(@PathVariable Long id) {
-        return new ResponseEntity<>(clientService.deleteClient(id),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(clientService.deleteClient(id), HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/{id}")

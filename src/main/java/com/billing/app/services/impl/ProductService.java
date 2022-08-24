@@ -3,6 +3,7 @@ package com.billing.app.services.impl;
 import com.billing.app.constants.Constants;
 import com.billing.app.constants.ErrorsConstants;
 import com.billing.app.constants.ValidConstants;
+import com.billing.app.exceptions.RequestException;
 import com.billing.app.model.entities.Product;
 import com.billing.app.repositories.IProductRepository;
 import com.billing.app.services.IProductService;
@@ -34,18 +35,20 @@ public class ProductService implements IProductService {
     @Override
     public Product findById(Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
-        return productOptional.orElse(null);
+        if (productOptional.isEmpty()) {
+            throw new RequestException("401", errorsConstants.notFound(Constants.PRODUCT, String.valueOf(id)));
+        }
+        return productOptional.get();
     }
 
     @Override
     public String deleteProduct(Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
-        if (productOptional.isPresent()) {
-            productRepository.delete(productOptional.get());
-            return validConstants.foundAndDelete(productOptional.get().getName());
-        } else {
-            return errorsConstants.notFound(Constants.PRODUCT,String.valueOf(id));
+        if (productOptional.isEmpty()) {
+            throw new RequestException("401", errorsConstants.notFound(Constants.PRODUCT, String.valueOf(id)));
         }
+        productRepository.delete(productOptional.get());
+        return validConstants.foundAndDelete(productOptional.get().getName());
     }
 
     @Override
